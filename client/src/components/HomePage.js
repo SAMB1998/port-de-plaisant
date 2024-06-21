@@ -1,7 +1,6 @@
 // src/components/HomePage.js
-
 import React, { useState } from 'react';
-import { login } from '../services/api'; // Chemin mis à jour pour correspondre à la nouvelle structure
+import { login } from '../services/api'; 
 import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {

@@ -1,18 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const catwayRoutes = require('./routes/catway');
 const reservationRoutes = require('./routes/reservationRoutes');
-const swaggerSetup = require('./swagger'); // Assurez-vous que cette ligne est correcte
+const swaggerSetup = require('./swagger');
 
 dotenv.config();
 
-// Ajoutez ces lignes pour vérifier les variables d'environnement
-console.log(`HOST: ${process.env.HOST}`);
-console.log(`PORT: ${process.env.PORT}`);
-
 const app = express();
+app.use(cors()); // Assurez-vous que CORS est appliqué ici
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI, {
@@ -26,9 +24,13 @@ mongoose.connect(process.env.MONGO_URI, {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/catways', catwayRoutes);
-app.use('/api/reservations', reservationRoutes); // Corrigez cette ligne
+app.use('/api/reservations', reservationRoutes);
 
-// Ajoutez cette ligne pour configurer Swagger
+// Ajoutez une route pour la racine
+app.get('/', (req, res) => {
+    res.send('Welcome to the Port de Plaisance API');
+});
+
 swaggerSetup(app, process.env.PORT || 5000);
 
 const HOST = process.env.HOST || 'localhost';
