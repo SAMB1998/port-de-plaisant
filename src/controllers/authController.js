@@ -2,6 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+// Fonction d'enregistrement
 exports.register = async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -17,6 +18,7 @@ exports.register = async (req, res) => {
             password
         });
 
+        // Hachage du mot de passe avant de sauvegarder l'utilisateur
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(password, salt);
         await user.save();
@@ -27,6 +29,7 @@ exports.register = async (req, res) => {
             }
         };
 
+        // Signature du jeton avec la clé secrète
         jwt.sign(
             payload,
             process.env.JWT_SECRET,
@@ -42,6 +45,7 @@ exports.register = async (req, res) => {
     }
 };
 
+// Fonction de connexion
 exports.login = async (req, res) => {
     const { email, password } = req.body;
 
@@ -51,6 +55,7 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
+        // Vérification du mot de passe
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
@@ -62,6 +67,7 @@ exports.login = async (req, res) => {
             }
         };
 
+        // Signature du jeton avec la clé secrète
         jwt.sign(
             payload,
             process.env.JWT_SECRET,
